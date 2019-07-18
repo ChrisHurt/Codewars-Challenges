@@ -1,6 +1,7 @@
 snail = function(array) {
   var xTravel;
   var yTravel = array.length;
+  console.log(array);
   
   var snail = []
   if(array[0] != undefined){
@@ -22,48 +23,67 @@ snail = function(array) {
   
   var xPos = 0;
   var yPos = 0;
+  var xFor = xPos
+  var yFor = yPos;
+  var isFirstPos = true;
   if(yTravel >= 2){
     while(xTravel > 0 && yTravel > 0){
-      console.log("xTravel: " + xTravel);
-      console.log("yTravel: " + yTravel);
       
       // Travel along positions barring the very first position
       if(isTravelHorizontal && xTravel > 0){
-        for(var i = xPos; (isLeft) ? ( i < xTravel) : ( i > xPos - xTravel) ; (isLeft) ? (i++):(i--)){
-          console.log("x: " + xPos + ",y: " + yPos + ",xTra: " + xTravel + ",yTra: " + yTravel + ",isT: " + isTop + ",isL: " + isLeft + ",i:" + i);
-          if(isLeft && xPos!=array[0].length-1){
+        if(motions >= 3){
+          xTravel--;
+        }
+        for(var i = xPos; (isLeft) ? ( i < xFor + xTravel) : ( i > xFor - xTravel) ; (isLeft) ? (i++):(i--)){
+          
+          if(isFirstPos){
+            isFirstPos = false;
+          } else {
+            snail.push(array[yPos][xPos]);
+          }
+           
+          if(isLeft && xPos < xFor + xTravel - 1){
             xPos++;
-          } else if (!isLeft && xPos!=0) {
+          } else if (!isLeft && xPos > xFor - xTravel + 1) {
             xPos--;
           }
         }
         isLeft = !isLeft;
+        xFor = xPos;
+        yFor = yPos;
       } else if (yTravel > 0){
-        for(var i = yPos; (isTop) ? ( i < yTravel) : ( i > yPos - yTravel) ; (isTop) ? (i++):(i--)){
-          console.log("x: " + xPos + ",y: " + yPos + ",xTra: " + xTravel + ",yTra: " + yTravel + ",isT: " + isTop + ",isL: " + isLeft + ",i:" + i);
-          if(isTop && yPos!=array.length-1){
+        if(motions >= 3){
+          yTravel--;
+        }
+        
+        for(var i = yPos; (isTop) ? ( i < yFor + yTravel) : ( i > yFor - yTravel) ; (isTop) ? (i++):(i--)){
+          
+          if(isFirstPos){
+            isFirstPos = false;
+          } else {
+            snail.push(array[yPos][xPos]);
+          }
+          if(isTop && yPos < yFor + yTravel - 1){
             yPos++;
-          } else if (isTop && yPos!=0){
+          } else if (!isTop && yPos > yFor - yTravel + 1){
             yPos--;
           }
         }  
         isTop = !isTop;
+        xFor = xPos
+        yFor = yPos
       }
       
-      // Swap Travel directions
+      motions++;
+      isFirstPos = true;
+      
+      // Swap Travel directions, TODO: confirm order is correct
       if(isTravelHorizontal){
         isTravelHorizontal = false;
       } else {
         isTravelHorizontal = true;
       }
-      motions++;
       
-      // Reduce travel length
-      if(isTravelHorizontal && motions >= 3){
-        xTravel--;
-      } else if(motions > 3){
-        yTravel--;
-      }
     }
   }
 
