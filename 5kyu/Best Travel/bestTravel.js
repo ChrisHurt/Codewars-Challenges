@@ -1,5 +1,4 @@
 // function calculatePermutation(currentTotal, t, k, ls){
-
 // }
 
 function chooseBestSum(t, k, ls) {
@@ -47,9 +46,6 @@ function chooseBestSum(t, k, ls) {
         if(rightStacked){
           return closestSum;
         }
-        
-      
-
         // else decrease the change index
           // check if iteration is possible
         
