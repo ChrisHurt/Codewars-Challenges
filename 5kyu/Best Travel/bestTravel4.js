@@ -34,6 +34,5 @@ function chooseBestSum(t, k, ls) {
       closestSum = permutationSum;
     }
   });
-  
   return closestSum;
 }
