@@ -1,0 +1,1 @@
+squirrel=(h,H,S)=>((h*h+S*S)**0.5*H/h).toFixed(4)*1
