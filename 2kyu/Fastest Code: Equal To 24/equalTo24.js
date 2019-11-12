@@ -28,7 +28,7 @@ function equalTo24(a,b,c,d){
   // map binary strings of all combinations of a,b,c,d orders
   let variableCombinations = []
   let variables = [a,b,c,d]
-  variableCombinations = getAllPermutations(`${a}-${b}-${c}-${d}`);
+  variableCombinations = getAllPermutations("0123");
   console.log(variableCombinations)
 //   let numPermutations = 0
 //   while(numPermutations < 24){
