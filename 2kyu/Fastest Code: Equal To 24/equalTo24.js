@@ -3,25 +3,46 @@ let calcString = (stringExpression) => {
   return 24;
 }
 
+// adjust function to work with numbers larger than 9
+function getAllPermutations(string) {
+  var results = [];
+
+  if (string.length === 1) {
+    results.push(string);
+    return results;
+  }
+
+  for (var i = 0; i < string.length; i++) {
+    var firstChar = string[i];
+    var charsLeft = string.substring(0, i) + string.substring(i + 1);
+    var innerPermutations = getAllPermutations(charsLeft);
+    for (var j = 0; j < innerPermutations.length; j++) {
+      results.push(firstChar + innerPermutations[j]);
+    }
+  }
+  return results;
+}
+
 function equalTo24(a,b,c,d){ 
   console.log(`inputs - a: ${a}, b: ${b}, c: ${c}, d: ${d}`);
   // map binary strings of all combinations of a,b,c,d orders
   let variableCombinations = []
   let variables = [a,b,c,d]
-  let numPermutations = 0
-  while(numPermutations < 24){
-    let varCombo = (numPermutations).toString(4)
-    if(varCombo.match(/0/) && varCombo.match(/0/g).length == 1 && 
-       varCombo.match(/1/) && varCombo.match(/1/g).length == 1 &&
-       varCombo.match(/2/) && varCombo.match(/2/g).length == 1 &&
-       varCombo.match(/3/) && varCombo.match(/3/g))
-    {
-      numPermutations++
-      variableCombinations.push(varCombo)
-    }
-    
-  }
+  variableCombinations = getAllPermutations(`${a}-${b}-${c}-${d}`);
   console.log(variableCombinations)
+//   let numPermutations = 0
+//   while(numPermutations < 24){
+//     let varCombo = (numPermutations).toString(4)
+//     if(varCombo.match(/0/) && varCombo.match(/0/g).length == 1 && 
+//        varCombo.match(/1/) && varCombo.match(/1/g).length == 1 &&
+//        varCombo.match(/2/) && varCombo.match(/2/g).length == 1 &&
+//        varCombo.match(/3/) && varCombo.match(/3/g))
+//     {
+//       numPermutations++
+//       variableCombinations.push(varCombo)
+//     }
+    
+//   }
   // map binary strings of all combinations of operators
   let operators = ['+','-','*','/']
   let operatorCombinations = []
