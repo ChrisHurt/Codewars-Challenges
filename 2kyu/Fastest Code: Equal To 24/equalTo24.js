@@ -1,9 +1,21 @@
 let calcString = (stringExpression) => {
-  // TODO: calculate from string
+  console.log(` START stringExpression: ${stringExpression}`)
+  while(stringExpression.includes('(')){
+    let subStrStart = stringExpression.lastIndexOf('(') + 1
+    let subStrEnd = stringExpression.slice(subStrStart).indexOf(')')
+    stringExpression = stringExpression.slice(0,subStrStart) +
+                       calcString(stringExpression.slice(subStrStart,subStrEnd)) +
+                       stringExpression.slice(subStrEnd)
+    console.log(`stringExpression: ${stringExpression}`)
+  }
+
+
+  // while brackets...
+  // find inner most brackets
+  // solve subexpression by recursion
   return 24;
 }
 
-// adjust function to work with numbers larger than 9
 function getAllPermutations(string) {
   var results = [];
 
@@ -76,19 +88,29 @@ function equalTo24(a,b,c,d){
           computationString += leftBrackets.filter(lb=>lb==='0').map(e=>'(').join('')
           // var - 1
           computationString += variables[varCombo[0]].toString()      
-          
-          console.log(computationString)
           // op pos-1
+          computationString += operators[opCombo[0]]
           // left br pos-1
+          computationString += leftBrackets.filter(lb=>lb==='1').map(e=>'(').join('')
           // var - 2
+          computationString += variables[varCombo[1]].toString()      
           // right br pos-2
+          computationString += rightBrackets.filter(rb=>rb==='2').map(e=>')').join('')
           // op pos-2
+          computationString += operators[opCombo[1]]
           // left br pos-2
+          computationString += leftBrackets.filter(lb=>lb==='2').map(e=>'(').join('')
           // var - 3
+          computationString += variables[varCombo[2]].toString()    
           // right br pos-3
+          computationString += rightBrackets.filter(rb=>rb==='3').map(e=>')').join('')
           // op pos-3
+          computationString += operators[opCombo[2]]
           // var - 4
+          computationString += variables[varCombo[3]].toString()
           // right br pos-4 
+          computationString += rightBrackets.filter(rb=>rb==='4').map(e=>')').join('')
+          console.log(computationString)
 
           if(calcString(computationString) === 24) return computationString
         })
