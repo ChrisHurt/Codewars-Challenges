@@ -62,7 +62,11 @@ let calcString = (stringExpression) => {
       let lastSubStr = ""
       stringExpression = expressionArray.reduce((newStringExpression,expSubStr,currentIndex)=>{
         // if expSubStr has an operator in it, add it back to the expression after the last expression
-        if(expSubStr.includes('-') || currentIndex + 1 === expressionArray.length){
+        if(expSubStr.includes('-')){
+          newStringExpression += Number(Number(lastSubStr) + 
+                                 Number(expSubStr.slice(0,expSubStr.indexOf('-')))) + 
+                                 expSubStr.slice(expSubStr.indexOf('-'))
+        } else if(currentIndex + 1 === expressionArray.length){
           if(Number(expSubStr) == expSubStr){
             newStringExpression += Number(lastSubStr) + Number(expSubStr)
           } else {
