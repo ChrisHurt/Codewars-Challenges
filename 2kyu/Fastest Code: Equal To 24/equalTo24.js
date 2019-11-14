@@ -1,19 +1,120 @@
 let calcString = (stringExpression) => {
   console.log(` START stringExpression: ${stringExpression}`)
   while(stringExpression.includes('(')){
-    let subStrStart = stringExpression.lastIndexOf('(') + 1
-    let subStrEnd = stringExpression.slice(subStrStart).indexOf(')')
+    let subStrStart = stringExpression.lastIndexOf('(')
+    let subStrEnd = stringExpression.slice(subStrStart).indexOf(')') + subStrStart + 1
     stringExpression = stringExpression.slice(0,subStrStart) +
-                       calcString(stringExpression.slice(subStrStart,subStrEnd)) +
+                       calcString(stringExpression.slice(subStrStart+1,subStrEnd-1)) +
                        stringExpression.slice(subStrEnd)
-    console.log(`stringExpression: ${stringExpression}`)
+    console.log(`After recombination stringExpression: ${stringExpression}`)
+  }
+  if(!stringExpression.includes('(')){
+    let expressionArray = []
+    // * - multiply
+    expressionArray = stringExpression.split('*');
+    if(expressionArray.length > 1){
+      let lastSubStr = ""
+      stringExpression = expressionArray.reduce((newStringExpression,expSubStr)=>{
+        // if expSubStr has an operator in it, add it back to the expression after the last expression
+        if(expSubStr.includes('/') || expSubStr.includes('+') || expSubStr.includes('-')){
+          newStringExpression += lastSubStr + expSubStr
+          lastSubStr = ""
+        // if expSubStr has no operator in it, store it as the lastSubStr
+        } else if(lastSubStr === ""){
+          lastSubStr = expSubStr;
+        // if expSubStr and lastSubStr have no operators, calc value and store in lastSubStr 
+        } else {
+          lastSubStr *= expSubStr
+        }
+        
+        return newStringExpression
+      },"")
+    }
+    console.log(`After '*' stringExpression: ${stringExpression}`)
+    // / - divide
+    expressionArray = stringExpression.split('/');
+    if(expressionArray.length > 1){
+      let lastSubStr = ""
+      stringExpression = expressionArray.reduce((newStringExpression,expSubStr)=>{
+        // if expSubStr has an operator in it, add it back to the expression after the last expression
+        if(expSubStr.includes('+') || expSubStr.includes('-')){
+          newStringExpression += lastSubStr + expSubStr
+          lastSubStr = ""
+        // if expSubStr has no operator in it, store it as the lastSubStr
+        } else if(lastSubStr === ""){
+          lastSubStr = expSubStr;
+        // if expSubStr and lastSubStr have no operators, calc value and store in lastSubStr 
+        } else {
+          lastSubStr /= expSubStr
+        }
+        
+        return newStringExpression
+      },"")
+    }
+    console.log(`After '/' stringExpression: ${stringExpression}`)
+    
+    // collapse +- symbols as needed
+    
+    // + - add
+    expressionArray = stringExpression.split('+');
+    console.log(expressionArray)
+    if(expressionArray.length > 1){
+      let lastSubStr = ""
+      stringExpression = expressionArray.reduce((newStringExpression,expSubStr,currentIndex)=>{
+        // if expSubStr has an operator in it, add it back to the expression after the last expression
+        if(expSubStr.includes('-') || currentIndex + 1 === expressionArray.length){
+          if(Number(expSubStr) == expSubStr){
+            newStringExpression += Number(lastSubStr) + Number(expSubStr)
+          } else {
+            newStringExpression += lastSubStr + expSubStr
+          }
+          lastSubStr = ""
+        // if expSubStr has no operator in it, store it as the lastSubStr
+        } else if(lastSubStr === ""){
+          lastSubStr = expSubStr;
+        // if expSubStr and lastSubStr have no operators, calc value and store in lastSubStr 
+        } else {
+          lastSubStr =  Number(lastSubStr) + Number(expSubStr)
+        }
+        
+        return newStringExpression
+      },"")
+    }
+    console.log(`After '+' stringExpression: ${stringExpression}`)
+    // - - subtract
+    expressionArray = stringExpression.split('-');
+    if(expressionArray.length > 1){
+      let lastSubStr = ""
+      stringExpression = expressionArray.reduce((newStringExpression,expSubStr,currentIndex)=>{
+        // if expSubStr has an operator in it, add it back to the expression after the last expression
+        if(currentIndex + 1 === expressionArray.length){
+          if(Number(expSubStr) == expSubStr){
+            newStringExpression += Number(lastSubStr) - Number(expSubStr)
+          } else {
+            newStringExpression += lastSubStr + expSubStr
+          }
+          lastSubStr = ""
+        // if expSubStr has no operator in it, store it as the lastSubStr
+        } else if(lastSubStr === ""){
+          lastSubStr = expSubStr;
+        // if expSubStr and lastSubStr have no operators, calc value and store in lastSubStr 
+        } else {
+          lastSubStr -= Number(expSubStr)
+        }
+        
+        return newStringExpression
+      },"")
+    }
+    console.log(`After '-' stringExpression: ${stringExpression}`)
   }
 
 
   // while brackets...
   // find inner most brackets
   // solve subexpression by recursion
-  return 24;
+  
+  console.log(`Returned stringExpression: ${stringExpression}`)
+  return stringExpression;
 }
 
 function getAllPermutations(string) {
@@ -42,19 +143,6 @@ function equalTo24(a,b,c,d){
   let variables = [a,b,c,d]
   variableCombinations = getAllPermutations("0123");
   console.log(variableCombinations)
-//   let numPermutations = 0
-//   while(numPermutations < 24){
-//     let varCombo = (numPermutations).toString(4)
-//     if(varCombo.match(/0/) && varCombo.match(/0/g).length == 1 && 
-//        varCombo.match(/1/) && varCombo.match(/1/g).length == 1 &&
-//        varCombo.match(/2/) && varCombo.match(/2/g).length == 1 &&
-//        varCombo.match(/3/) && varCombo.match(/3/g))
-//     {
-//       numPermutations++
-//       variableCombinations.push(varCombo)
-//     }
-    
-//   }
   // map binary strings of all combinations of operators
   let operators = ['+','-','*','/']
   let operatorCombinations = []
@@ -65,6 +153,7 @@ function equalTo24(a,b,c,d){
   }
   // manually assign strings of all combinations of brackets
   let bracketCombinations = [
+    '',
     '02-24',
     '02',
     '24',
@@ -116,11 +205,5 @@ function equalTo24(a,b,c,d){
         })
       })
     })
-      // for each scoped order try *,/,+,-
-      // calculate the permutation
-      // return early if the permutation succeeds
-      
-  
-  
   return "It's not possible!"
 }
