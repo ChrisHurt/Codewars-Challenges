@@ -14,17 +14,30 @@ let calcString = (stringExpression) => {
     expressionArray = stringExpression.split('*');
     if(expressionArray.length > 1){
       let lastSubStr = ""
-      stringExpression = expressionArray.reduce((newStringExpression,expSubStr)=>{
+      stringExpression = expressionArray.reduce((newStringExpression,expSubStr,currentIndex)=>{        
         // if expSubStr has an operator in it, add it back to the expression after the last expression
         if(expSubStr.includes('/') || expSubStr.includes('+') || expSubStr.includes('-')){
+          // Find furthest index
+          if(expSubStr.indexOf('/') > expSubStr.indexOf('+') && expSubStr.indexOf('/') >  expSubStr.indexOf('-')){
+            newStringExpression += lastSubStr + expSubStr.slice(0,expSubStr.indexOf('/')+1)
+            lastSubStr = expSubStr.slice(expSubStr.indexOf('/')+1)
+          } else if(expSubStr.indexOf('+') > expSubStr.indexOf('/') && expSubStr.indexOf('+') >  expSubStr.indexOf('-')){
+            newStringExpression += lastSubStr + expSubStr.slice(0,expSubStr.indexOf('+')+1)
+            lastSubStr = expSubStr.slice(expSubStr.indexOf('+')+1)
+          } else {
+            newStringExpression += lastSubStr + expSubStr.slice(0,expSubStr.indexOf('-')+1)
+            lastSubStr = expSubStr.slice(expSubStr.indexOf('-')+1)
+          }
           newStringExpression += lastSubStr + expSubStr
+        } else if(currentIndex + 1 === expressionArray.length){
+          newStringExpression += Number(lastSubStr) * Number(expSubStr)
           lastSubStr = ""
         // if expSubStr has no operator in it, store it as the lastSubStr
         } else if(lastSubStr === ""){
           lastSubStr = expSubStr;
         // if expSubStr and lastSubStr have no operators, calc value and store in lastSubStr 
         } else {
-          lastSubStr *= expSubStr
+          lastSubStr = Number(lastSubStr) * Number(expSubStr)
         }
         
         return newStringExpression
@@ -143,6 +156,7 @@ function getAllPermutations(string) {
 function equalTo24(a,b,c,d){ 
   console.log(`inputs - a: ${a}, b: ${b}, c: ${c}, d: ${d}`);
   // map binary strings of all combinations of a,b,c,d orders
+  let computedValue = "It's not possible!"
   let variableCombinations = []
   let variables = [a,b,c,d]
   variableCombinations = getAllPermutations("0123");
@@ -168,15 +182,18 @@ function equalTo24(a,b,c,d){
     '14-24',
     '14-13'
   ]
-    let computationString = ""
+  let computationString = ""
     // for each variable combination consider all bracket variants
-    variableCombinations.forEach(varCombo=>{
-      operatorCombinations.forEach(opCombo=>{
-        bracketCombinations.forEach(brCombo=>{
+//     variableCombinations.forEach(varCombo=>{
+//       operatorCombinations.forEach(opCombo=>{
+//         bracketCombinations.forEach(brCombo=>{
+    for(let varCombo of variableCombinations){
+      for(let opCombo of operatorCombinations){
+        for(let brCombo of bracketCombinations){
           let brackets = brCombo.split("-")
           let leftBrackets = brackets.map(bracket=>bracket[0])
           let rightBrackets = brackets.map(bracket=>bracket[1])
-          let computationString = ""
+          computationString = ""
           // left br pos-0
           computationString += leftBrackets.filter(lb=>lb==='0').map(e=>'(').join('')
           // var - 1
@@ -204,10 +221,16 @@ function equalTo24(a,b,c,d){
           // right br pos-4 
           computationString += rightBrackets.filter(rb=>rb==='4').map(e=>')').join('')
           console.log(computationString)
-
-          if(calcString(computationString) === 24) return computationString
-        })
-      })
-    })
-  return "It's not possible!"
+          
+          if(Number(calcString(computationString)) == 24){
+            computedValue = 24
+          }
+          if(computedValue === 24) break
+        }
+        if(computedValue === 24) break
+      }
+      if(computedValue === 24) break
+    }
+    if(computedValue === 24) console.log(`correct solution: ${computationString}`)
+  return computedValue
 }
