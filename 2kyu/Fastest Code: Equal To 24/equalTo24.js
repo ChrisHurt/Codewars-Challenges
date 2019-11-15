@@ -12,23 +12,23 @@ let calcString = (stringExpression) => {
     let expressionArray = []
     // * - multiply
     expressionArray = stringExpression.split('*');
+//     console.log(expressionArray
     if(expressionArray.length > 1){
       let lastSubStr = ""
       stringExpression = expressionArray.reduce((newStringExpression,expSubStr,currentIndex)=>{        
         // if expSubStr has an operator in it, add it back to the expression after the last expression
         if(expSubStr.includes('/') || expSubStr.includes('+') || expSubStr.includes('-')){
           // Find furthest index
+          let appendString = ""
           if(expSubStr.indexOf('/') > expSubStr.indexOf('+') && expSubStr.indexOf('/') >  expSubStr.indexOf('-')){
-            newStringExpression += lastSubStr + expSubStr.slice(0,expSubStr.indexOf('/')+1)
-            lastSubStr = expSubStr.slice(expSubStr.indexOf('/')+1)
+            appendString = expSubStr.slice(0,expSubStr.indexOf('/')+1)
           } else if(expSubStr.indexOf('+') > expSubStr.indexOf('/') && expSubStr.indexOf('+') >  expSubStr.indexOf('-')){
-            newStringExpression += lastSubStr + expSubStr.slice(0,expSubStr.indexOf('+')+1)
-            lastSubStr = expSubStr.slice(expSubStr.indexOf('+')+1)
+            appendString = expSubStr.slice(0,expSubStr.indexOf('+')+1)
           } else {
-            newStringExpression += lastSubStr + expSubStr.slice(0,expSubStr.indexOf('-')+1)
-            lastSubStr = expSubStr.slice(expSubStr.indexOf('-')+1)
+            appendString = expSubStr.slice(0,expSubStr.indexOf('-')+1)
           }
-          newStringExpression += lastSubStr + expSubStr
+          newStringExpression += lastSubStr + appendString
+          lastSubStr = appendString
         } else if(currentIndex + 1 === expressionArray.length){
           newStringExpression += Number(lastSubStr) * Number(expSubStr)
           lastSubStr = ""
@@ -184,9 +184,6 @@ function equalTo24(a,b,c,d){
   ]
   let computationString = ""
     // for each variable combination consider all bracket variants
-//     variableCombinations.forEach(varCombo=>{
-//       operatorCombinations.forEach(opCombo=>{
-//         bracketCombinations.forEach(brCombo=>{
     for(let varCombo of variableCombinations){
       for(let opCombo of operatorCombinations){
         for(let brCombo of bracketCombinations){
