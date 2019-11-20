@@ -10,7 +10,7 @@ let calcString = (stringExpression) => {
   }
   if(!stringExpression.includes('(')){
     let expressionArray = []
-    // * - multiply
+    // * - multiply 
     expressionArray = stringExpression.split('*');
 //     console.log(expressionArray
     if(expressionArray.length > 1){
