@@ -10,9 +10,8 @@ let calcString = (stringExpression) => {
   }
   if(!stringExpression.includes('(')){
     let expressionArray = []
-    // * - multiply 
+    // * - multiply
     expressionArray = stringExpression.split('*');
-//     console.log(expressionArray
     if(expressionArray.length > 1){
       let lastSubStr = ""
       stringExpression = expressionArray.reduce((newStringExpression,expSubStr,currentIndex)=>{        
@@ -20,15 +19,21 @@ let calcString = (stringExpression) => {
         if(expSubStr.includes('/') || expSubStr.includes('+') || expSubStr.includes('-')){
           // Find furthest index
           let appendString = ""
-          if(expSubStr.indexOf('/') > expSubStr.indexOf('+') && expSubStr.indexOf('/') >  expSubStr.indexOf('-')){
-            appendString = expSubStr.slice(0,expSubStr.indexOf('/')+1)
-          } else if(expSubStr.indexOf('+') > expSubStr.indexOf('/') && expSubStr.indexOf('+') >  expSubStr.indexOf('-')){
-            appendString = expSubStr.slice(0,expSubStr.indexOf('+')+1)
+          if(expSubStr.lastIndexOf('/') > expSubStr.lastIndexOf('+') && expSubStr.lastIndexOf('/') >  expSubStr.lastIndexOf('-')){
+            appendString = expSubStr.slice(0,expSubStr.lastIndexOf('/')+1)
+            lastSubStr = expSubStr.slice(expSubStr.lastIndexOf('/')+1)
+          } else if(expSubStr.lastIndexOf('+') > expSubStr.lastIndexOf('/') && expSubStr.lastIndexOf('+') >  expSubStr.lastIndexOf('-')){
+            appendString = expSubStr.slice(0,expSubStr.lastIndexOf('+')+1)
+            lastSubStr = expSubStr.slice(expSubStr.lastIndexOf('+')+1)
           } else {
-            appendString = expSubStr.slice(0,expSubStr.indexOf('-')+1)
+            appendString = expSubStr.slice(0,expSubStr.lastIndexOf('-')+1)
+            lastSubStr   = expSubStr.slice(expSubStr.lastIndexOf('-')+1)
           }
-          newStringExpression += lastSubStr + appendString
-          lastSubStr = appendString
+          console.log(`expSubStr: ${expSubStr}`)
+          console.log(`lastSubStr: ${lastSubStr}`)
+          console.log(`appendString: ${appendString}`)
+//           newStringExpression += lastSubStr + appendString
+          newStringExpression += appendString
         } else if(currentIndex + 1 === expressionArray.length){
           newStringExpression += Number(lastSubStr) * Number(expSubStr)
           lastSubStr = ""
@@ -160,7 +165,6 @@ function equalTo24(a,b,c,d){
   let variableCombinations = []
   let variables = [a,b,c,d]
   variableCombinations = getAllPermutations("0123");
-  console.log(variableCombinations)
   // map binary strings of all combinations of operators
   let operators = ['+','-','*','/']
   let operatorCombinations = []
