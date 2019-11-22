@@ -1,4 +1,4 @@
-let calcString = (stringExpression) => {
+const calcString = (stringExpression) => {
   //   console.log(` START stringExpression: ${stringExpression}`)
     while(stringExpression.includes('(')){
       let subStrStart = stringExpression.lastIndexOf('(')
@@ -138,7 +138,7 @@ let calcString = (stringExpression) => {
     return stringExpression;
   }
   
-  function getAllPermutations(string) {
+  const getAllPermutations = (string)=> {
     var results = [];
   
     if (string.length === 1) {
@@ -197,12 +197,32 @@ let calcString = (stringExpression) => {
             computationString += leftBrackets.filter(lb=>lb==='0').map(e=>'(').join('')
             // var - 1
             computationString += variables[varCombo[0]]
+  //           switch(varCombo[0]){
+  //             case '0': computationString += a
+  //               break
+  //             case '1': computationString += b
+  //               break
+  //             case '2': computationString += c
+  //               break
+  //             case '3': computationString += d
+  //               break
+  //           }
             // op pos-1
             computationString += operators[opCombo[0]]
             // left br pos-1
             computationString += leftBrackets.filter(lb=>lb==='1').map(e=>'(').join('')
             // var - 2
-            computationString += variables[varCombo[1]]   
+            computationString += variables[varCombo[1]]
+  //           switch(varCombo[1]){
+  //             case '0': computationString += a
+  //               break
+  //             case '1': computationString += b
+  //               break
+  //             case '2': computationString += c
+  //               break
+  //             case '3': computationString += d
+  //               break
+  //           }
             // right br pos-2
             computationString += rightBrackets.filter(rb=>rb==='2').map(e=>')').join('')
             // op pos-2
@@ -211,12 +231,32 @@ let calcString = (stringExpression) => {
             computationString += leftBrackets.filter(lb=>lb==='2').map(e=>'(').join('')
             // var - 3
             computationString += variables[varCombo[2]]
+  //           switch(varCombo[2]){
+  //             case '0': computationString += a
+  //               break
+  //             case '1': computationString += b
+  //               break
+  //             case '2': computationString += c
+  //               break
+  //             case '3': computationString += d
+  //               break
+  //           }
             // right br pos-3
             computationString += rightBrackets.filter(rb=>rb==='3').map(e=>')').join('')
             // op pos-3
             computationString += operators[opCombo[2]]
             // var - 4
             computationString += variables[varCombo[3]]
+  //           switch(varCombo[3]){
+  //             case '0': computationString += a
+  //               break
+  //             case '1': computationString += b
+  //               break
+  //             case '2': computationString += c
+  //               break
+  //             case '3': computationString += d
+  //               break
+  //           }
             // right br pos-4 
             computationString += rightBrackets.filter(rb=>rb==='4').map(e=>')').join('')
   //           console.log(computationString)
@@ -230,6 +270,10 @@ let calcString = (stringExpression) => {
         }
         if(computedValue === 24) break
       }
-      if(computedValue === 24) console.log(`correct solution: ${computationString}`)
-    return computedValue
+    if(computedValue === 24){
+      console.log(`correct solution: ${computationString}`)
+      return computationString
+    } else {
+      return "It's not possible!"
+    }
   }
