@@ -77,8 +77,6 @@ const calcString = (stringExpression) => {
       let lastSubStr = ""
       stringExpression = expressionArray.reduce((newStringExpression,expSubStr,currentIndex)=>{        
         // if expSubStr has an operator in it, add it back to the expression after the last expression
-        
-        
         if(expSubStr.includes('/') || expSubStr.includes('+') || expSubStr.includes('-')){
           let appendString = ""
           // Find the first operator
@@ -147,14 +145,26 @@ const calcString = (stringExpression) => {
     }
     if(expressionArray.length > 1){
       let lastSubStr = ""
+      let nextIsNegative = false
       stringExpression = expressionArray.reduce((newStringExpression,expSubStr,currentIndex)=>{
         // if expSubStr has an operator in it, add it back to the expression after the last expression
-        if(currentIndex + 1 === expressionArray.length){
+        if(expSubStr === ""){
+          nextIsNegative = true
+        } else if(currentIndex + 1 === expressionArray.length){
           if(Number(expSubStr) == expSubStr){
-            newStringExpression += Number(lastSubStr) - Number(expSubStr)
+            if(nextIsNegative){
+              newStringExpression += Number(lastSubStr) + Number(expSubStr)
+            } else {
+              newStringExpression += Number(lastSubStr) - Number(expSubStr)
+            }
           } else {
             if(lastSubStr !== ""){
-              newStringExpression += Number(lastSubStr) - Number(expSubStr.slice(0,expSubStr.indexOf('+')))
+              if(nextIsNegative){
+                newStringExpression += Number(lastSubStr) + Number(expSubStr.slice(0,expSubStr.indexOf('+')))
+              } else {
+                newStringExpression += Number(lastSubStr) - Number(expSubStr.slice(0,expSubStr.indexOf('+')))
+              }
+//               newStringExpression += Number(lastSubStr) - Number(expSubStr.slice(0,expSubStr.indexOf('+')))
               newStringExpression += expSubStr.slice(expSubStr.indexOf('+'))
             } else {
               newStringExpression += expSubStr
@@ -162,15 +172,19 @@ const calcString = (stringExpression) => {
           }
           lastSubStr = ""
         // if expSubStr has no operator in it, store it as the lastSubStr
+          nextIsNegative = false
         } else if(lastSubStr === ""){
           lastSubStr = expSubStr;
         // if expSubStr and lastSubStr have no operators, calc value and store in lastSubStr 
+          nextIsNegative = false
         } else {
           lastSubStr -= Number(expSubStr)
+          nextIsNegative = false
         }
 //         console.log('')
 //         console.log("expSubStr:",expSubStr)
 //         console.log("lastSubStr: ",lastSubStr)
+//         console.log("nextIsNegative: ",nextIsNegative)
 //         console.log("newStringExpression:",newStringExpression)
 //         console.log('')
         
@@ -314,6 +328,12 @@ function equalTo24(a,b,c,d){
 }
 
 // Unit Tests
+
+// console.log("Testing calcString for '2--1', your answer is:",calcString("2--1"))
+// Test.assertSimilar(Number(calcString("2--1")), 3);
+
+// console.log("Testing calcString for '72*((96/72)-1)', your answer is:",calcString("72*((96/72)-1)"))
+// Test.assertSimilar(Number(calcString("72*((96/72)-1)")), 24);
 
 // console.log("Testing calcString for '(96/8*6)*12', your answer is:",calcString("(96/8*6)*12"))
 // Test.assertSimilar(Number(calcString("(96/8*6)*12")), -40);
