@@ -264,14 +264,9 @@ function equalTo24(a,b,c,d){
   }
   // manually assign strings of all combinations of brackets
   let bracketCombinations = [
-    '',
     '02-24',
-    '02',
-    '24',
-    '03',
     '03-02',
     '03-13',
-    '14',
     '14-24',
     '14-13'
   ]
@@ -326,7 +321,6 @@ function equalTo24(a,b,c,d){
     return "It's not possible!"
   }
 }
-
 // Unit Tests
 
 // console.log("Testing calcString for '2--1', your answer is:",calcString("2--1"))
