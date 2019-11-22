@@ -9,8 +9,69 @@ const calcString = (stringExpression) => {
 //     console.log(`After recombination stringExpression: ${stringExpression}`)
   }
   if(!stringExpression.includes('(')){
+    // / - divide
+    let expressionArray = stringExpression.split('/')
+    if(expressionArray.length > 1){
+      let lastSubStr = ""
+      stringExpression = expressionArray.reduce((newStringExpression,expSubStr,currentIndex)=>{
+        // if expSubStr has an operator in it, add it back to the expression after the last expression
+        if(expSubStr.includes('*') || expSubStr.includes('+') || expSubStr.includes('-')){
+          let appendString = ""
+          if(lastSubStr !== ""){
+            if(expSubStr.indexOf('+') > expSubStr.indexOf('-') && expSubStr.indexOf('+') > expSubStr.indexOf('*')){
+              appendString = Number(lastSubStr) / Number(expSubStr.slice(0,expSubStr.indexOf('+')))
+              lastSubStr = expSubStr.slice(expSubStr.indexOf('+'))
+            } else if(expSubStr.indexOf('*') > expSubStr.indexOf('-') && expSubStr.indexOf('*') > expSubStr.indexOf('+')){
+              appendString = Number(lastSubStr) / Number(expSubStr.slice(0,expSubStr.indexOf('*')))
+              lastSubStr = expSubStr.slice(expSubStr.indexOf('*'))
+            } else {
+              appendString = Number(lastSubStr) / Number(expSubStr.slice(0,expSubStr.indexOf('-')))
+              lastSubStr   = expSubStr.slice(expSubStr.indexOf('-'))
+            }
+//             console.log("appendString",appendString)
+          } else {
+            if(expSubStr.lastIndexOf('+') > expSubStr.lastIndexOf('-') && expSubStr.indexOf('+') > expSubStr.indexOf('*')){
+              appendString = expSubStr.slice(0,expSubStr.lastIndexOf('+')+1)
+              lastSubStr = expSubStr.slice(expSubStr.lastIndexOf('+')+1)
+            } else if(expSubStr.indexOf('*') > expSubStr.indexOf('-') && expSubStr.indexOf('*') > expSubStr.indexOf('+')) {
+              appendString = expSubStr.slice(0,expSubStr.lastIndexOf('*')+1)
+              lastSubStr = expSubStr.slice(expSubStr.lastIndexOf('*')+1)
+            } else {
+              appendString = expSubStr.slice(0,expSubStr.lastIndexOf('-')+1)
+              lastSubStr   = expSubStr.slice(expSubStr.lastIndexOf('-')+1)
+            }
+          }
+          newStringExpression += appendString
+          if(currentIndex + 1 === expressionArray.length){
+            newStringExpression += lastSubStr
+          }
+        } else if(currentIndex + 1 === expressionArray.length){
+          if(lastSubStr[0] == '+' || lastSubStr[0] == '-'){
+            newStringExpression += lastSubStr[0]
+            lastSubStr.slice(1)
+          }
+          newStringExpression += Number(lastSubStr) / Number(expSubStr)
+          lastSubStr = ""
+        // if expSubStr has no operator in it, store it as the lastSubStr
+        } else if(lastSubStr === ""){
+          lastSubStr = expSubStr;
+        // if expSubStr and lastSubStr have no operators, calc value and store in lastSubStr 
+        } else {
+          lastSubStr = Number(lastSubStr) / Number(expSubStr)
+        }
+        
+//         console.log('')
+//         console.log("expSubStr: ",expSubStr)
+//         console.log("lastSubStr: ",lastSubStr)
+//         console.log("newStringExpression: ",newStringExpression)
+//         console.log('')
+        
+        return newStringExpression
+      },"")
+    }
+//     console.log(`After '/' stringExpression: ${stringExpression}`)
     // * - multiply
-    let expressionArray = stringExpression.split('*');
+    expressionArray = stringExpression.split('*');
 //     console.log("expressionArray",expressionArray)
     if(expressionArray.length > 1){
       let lastSubStr = ""
@@ -76,62 +137,6 @@ const calcString = (stringExpression) => {
       },"")
     }
 //     console.log(`After '*' stringExpression: ${stringExpression}`)
-    // / - divide
-    expressionArray = stringExpression.split('/')
-    if(expressionArray.length > 1){
-      let lastSubStr = ""
-      stringExpression = expressionArray.reduce((newStringExpression,expSubStr,currentIndex)=>{
-        // if expSubStr has an operator in it, add it back to the expression after the last expression
-        if(expSubStr.includes('+') || expSubStr.includes('-')){
-          let appendString = ""
-          if(lastSubStr !== ""){
-            if(expSubStr.indexOf('+') > expSubStr.indexOf('-')){
-              appendString = Number(lastSubStr) / Number(expSubStr.slice(0,expSubStr.indexOf('+')))
-              lastSubStr = expSubStr.slice(expSubStr.indexOf('+'))
-            } else {
-              appendString = Number(lastSubStr) / Number(expSubStr.slice(0,expSubStr.indexOf('-')))
-              lastSubStr   = expSubStr.slice(expSubStr.indexOf('-'))
-            }
-//             console.log("appendString",appendString)
-          } else {
-            if(expSubStr.lastIndexOf('+') > expSubStr.lastIndexOf('-')){
-              appendString = expSubStr.slice(0,expSubStr.lastIndexOf('+')+1)
-              lastSubStr = expSubStr.slice(expSubStr.lastIndexOf('+')+1)
-            } else {
-              appendString = expSubStr.slice(0,expSubStr.lastIndexOf('-')+1)
-              lastSubStr   = expSubStr.slice(expSubStr.lastIndexOf('-')+1)
-            }
-          }
-          newStringExpression += appendString
-          if(currentIndex + 1 === expressionArray.length){
-            newStringExpression += lastSubStr
-          }
-        } else if(currentIndex + 1 === expressionArray.length){
-          if(lastSubStr[0] == '+' || lastSubStr[0] == '-'){
-            newStringExpression += lastSubStr[0]
-            lastSubStr.slice(1)
-          }
-          newStringExpression += Number(lastSubStr) / Number(expSubStr)
-          lastSubStr = ""
-        // if expSubStr has no operator in it, store it as the lastSubStr
-        } else if(lastSubStr === ""){
-          lastSubStr = expSubStr;
-        // if expSubStr and lastSubStr have no operators, calc value and store in lastSubStr 
-        } else {
-          lastSubStr = Number(lastSubStr) / Number(expSubStr)
-        }
-        
-//         console.log('')
-//         console.log("expSubStr: ",expSubStr)
-//         console.log("lastSubStr: ",lastSubStr)
-//         console.log("newStringExpression: ",newStringExpression)
-//         console.log('')
-        
-        return newStringExpression
-      },"")
-    }
-//     console.log(`After '/' stringExpression: ${stringExpression}`)
-    
     // - - subtract
     expressionArray = stringExpression.split('-');
 //     console.log("- expressionArray",expressionArray)
