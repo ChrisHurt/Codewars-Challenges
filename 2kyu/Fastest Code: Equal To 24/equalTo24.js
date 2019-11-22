@@ -73,14 +73,24 @@ const calcString = (stringExpression) => {
         // if expSubStr has an operator in it, add it back to the expression after the last expression
         if(expSubStr.includes('+') || expSubStr.includes('-')){
           let appendString = ""
-          if(expSubStr.lastIndexOf('+') > expSubStr.lastIndexOf('-')){
-            appendString = expSubStr.slice(0,expSubStr.lastIndexOf('+')+1)
-            lastSubStr = expSubStr.slice(expSubStr.lastIndexOf('+')+1)
+          if(lastSubStr !== ""){
+            if(expSubStr.indexOf('+') > expSubStr.indexOf('-')){
+              appendString = Number(lastSubStr) / Number(expSubStr.slice(0,expSubStr.indexOf('+')))
+              lastSubStr = expSubStr.slice(expSubStr.indexOf('+'))
+            } else {
+              appendString = Number(lastSubStr) / Number(expSubStr.slice(0,expSubStr.indexOf('-')))
+              lastSubStr   = expSubStr.slice(expSubStr.indexOf('-'))
+            }
           } else {
-            appendString = expSubStr.slice(0,expSubStr.lastIndexOf('-')+1)
-            lastSubStr   = expSubStr.slice(expSubStr.lastIndexOf('-')+1)
+            if(expSubStr.lastIndexOf('+') > expSubStr.lastIndexOf('-')){
+              appendString = expSubStr.slice(0,expSubStr.lastIndexOf('+')+1)
+              lastSubStr = expSubStr.slice(expSubStr.lastIndexOf('+')+1)
+            } else {
+              appendString = expSubStr.slice(0,expSubStr.lastIndexOf('-')+1)
+              lastSubStr   = expSubStr.slice(expSubStr.lastIndexOf('-')+1)
+            }
           }
-          newStringExpression += appendString
+          newStringExpression += appendString + lastSubStr
         } else if(currentIndex + 1 === expressionArray.length){
           newStringExpression += Number(lastSubStr) / Number(expSubStr)
           lastSubStr = ""
